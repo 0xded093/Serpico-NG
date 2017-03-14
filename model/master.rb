@@ -12,6 +12,25 @@ class TemplateFindings
 
     property :id, Serial
     property :title, String, :required => true, :length => 200
+    property :type, String, :required => false
+    property :overview, String, :length => 20000, :required => false
+    property :poc, String, :length => 20000, :required => false
+    property :remediation, String, :length => 20000, :required => false
+    property :references, String, :length => 20000, :required => false
+    property :approved, Boolean, :required => false, :default => true
+    property :affected_hosts, String, :length => 20000, :required => false
+    # CVSS
+    property :cvss_score, String, :required => false
+    property :cvss_vector, String, :required => false
+    property :cvss_severity, String, :required => false
+    # tag
+    property :tags, String, :required => false
+    # ehat
+    property :parameter, String, :required => false
+    property :method, String, :required => false
+    # nlp
+    property :summary, String, :required => false
+    # legacy fields for OLD Serpico compatibility
     property :damage, Integer, :required => false
     property :reproducability, Integer, :required => false
     property :exploitability, Integer, :required => false
@@ -19,15 +38,7 @@ class TemplateFindings
     property :discoverability, Integer, :required => false
     property :dread_total, Integer, :required => false
     property :effort, String, :required => false
-    property :type, String, :required => false
-    property :overview, String, :length => 20000, :required => false
-    property :poc, String, :length => 20000, :required => false
-    property :remediation, String, :length => 20000, :required => false
-    property :references, String, :length => 20000, :required => false
-    property :approved, Boolean, :required => false, :default => true
     property :risk, Integer, :required => false
-    property :affected_hosts, String, :length => 20000, :required => false
-    # CVSS
     property :av, String, :required => false
     property :ac, String, :required => false
     property :au, String, :required => false
@@ -50,24 +61,20 @@ class TemplateFindings
     property :cvss_modified_impact, Float, :required => false
     property :cvss_total, Float, :required => false
     property :ease, String, :required => false
+
+
 end
 
 class Findings
     include DataMapper::Resource
 
     property :id, Serial
+    property :title, String, :required => true, :length => 200
     property :report_id, Integer, :required => true
     property :master_id, Integer, :required => false
     property :finding_modified, Boolean, :required => false
-    property :title, String, :required => true, :length => 200
-    property :damage, Integer, :required => false
-    property :reproducability, Integer, :required => false
-    property :exploitability, Integer, :required => false
-    property :affected_users, Integer, :required => false
-    property :discoverability, Integer, :required => false
     property :effort, String, :required => false
     property :type, String, :required => false
-    property :dread_total, Integer, :required => false
     property :overview, String, :length => 20000, :required => false
     property :poc, String, :length => 20000, :required => false
     property :remediation, String, :length => 20000, :required => false
@@ -78,7 +85,26 @@ class Findings
     property :affected_hosts, String, :length => 1000000, :required => false
     property :presentation_points, String, :length => 100000, :required => false
     property :presentation_rem_points, String, :length => 100000, :required => false
+    property :cve, String, :required => false
     #CVSS
+    property :cvss_score, String, :required => false
+    property :cvss_vector, String, :required => false
+    property :cvss_severity, String, :required => false
+    # tag
+    property :tags, String, :required => false
+    # ehat
+    property :parameter, String, :required => false
+    property :method, String, :required => false
+    # nlp
+    property :summary, String, :required => false
+    # legacy fields for OLD Serpico compatibility
+    property :damage, Integer, :required => false
+    property :reproducability, Integer, :required => false
+    property :exploitability, Integer, :required => false
+    property :affected_users, Integer, :required => false
+    property :discoverability, Integer, :required => false
+    property :dread_total, Integer, :required => false
+    property :risk, Integer, :required => false
     property :av, String, :required => false
     property :ac, String, :required => false
     property :au, String, :required => false
@@ -101,7 +127,6 @@ class Findings
     property :cvss_modified_impact, Float, :required => false
     property :cvss_total, Float, :required => false
     property :ease, String, :required => false
-
 end
 
 class TemplateReports
@@ -115,12 +140,14 @@ class TemplateReports
     property :contact_name, String, :required => false, :length => 200
     property :contact_phone, String
     property :contact_email, String
-    property :contact_city, String
-    property :contact_address, String
-    property :contact_zip, String
     property :full_company_name, String, :required => true, :length => 200
     property :short_company_name, String, :required => true, :length => 200
     property :company_website, String
+    property :approved, String
+    property :deadline, String
+    property :contact_city, String
+    property :contact_address, String
+    property :contact_zip, String
 
 
 end
@@ -191,7 +218,6 @@ class Sessions
             return sess.username
         end
     end
-
     def self.is_plugin?(session_key)
         sess = Sessions.first(:session_key => session_key)
 
@@ -199,7 +225,6 @@ class Sessions
             return User.first(:username => sess.username).plugin
         end
     end
-
 
 end
 
@@ -244,6 +269,14 @@ class BurpMapping
     property :pluginid, String, :required => true
 end
 
+class NexposeMapping
+    include DataMapper::Resource
+
+    property :id, Serial
+    property :templatefindings_id, String, :required => true
+    property :pluginid, String, :required => true
+end
+
 class Reports
     include DataMapper::Resource
 
@@ -259,18 +292,21 @@ class Reports
     property :contact_name, String, :length => 200
     property :contact_phone, String
     property :contact_title, String, :length => 200
-    property :contact_email, String, :length => 200
     property :contact_city, String
     property :contact_address, String, :length => 200
     property :contact_state, String
     property :contact_zip, String
+    property :contact_email, String, :length => 200
     property :full_company_name, String, :length => 200
     property :short_company_name, String, :length => 200
     property :company_website, String, :length => 200
     property :owner, String, :length => 200
     property :authors, CommaSeparatedList, :required => false, :lazy => false
     property :user_defined_variables, String, :length => 10000
-
+    # calendar
+    property :start_date, String, :length => 20, :required => true
+    property :end_date, String, :length => 20, :required => true
+    property :color, String, :length => 10
 end
 
 class Attachments

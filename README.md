@@ -1,67 +1,59 @@
-# Serpico
-## SimplE RePort wrIting and CollaboratiOn tool
-Serpico is a penetration testing report generation and collaboration tool. It was developed to cut down on the amount of time it takes to write a penetration testing report.
-
-Video Demo of Functionality:
-
-* [Serpico - Demo 1](https://www.youtube.com/watch?v=G_qYcL4ynSc)
-
-* [Additional Video Demos](https://github.com/SerpicoProject/Serpico/wiki#online-demos)
+# Serpico-NG
+## SimplE RePort wrIting and CollaboratiOn tool NEXT-GENERATION
+Serpico was a cool open-source penetration testing report generation and collaboration tool. It was developed to cut down on the amount of time it takes to write a penetration testing report, and now it's even better!
 
 ## Installation
 
-The installation options are:
+### Linux / OS X / Windows
 
-* [Install Official Release](https://github.com/SerpicoProject/Serpico/releases): The prefered method of installation which includes all dependencies in one package.
-
-* [Developer Build](https://github.com/SerpicoProject/Serpico/wiki/Developer-Build): Simple Instructions to build from clone
-
-* [Windows Developer Build](https://github.com/SerpicoProject/Serpico/wiki/Windows-Installation): Serpico can also be built and run on Windows
-
-* [Running Serpico From Docker](https://github.com/SerpicoProject/Serpico/wiki/Running-Serpico-From-Docker)
-
-## Post-Installation Releases : Getting Started
-
-### Kali/Ubuntu/Debian
+Clone the repo:
+```
+git clone https://github.com/dedins/Serpico-NG
+```
 
 Initialize the database:
 ```
-/opt/Serpico/init_serpico.sh
+ruby scripts/first_time.rb
 ```
 
 And then start Serpico:
 ```
-/opt/Serpico/start_serpico.sh
-```
-
-### OS X
-
-Initialize the database:
-```
-/Users/Shared/Serpico/init_serpico.sh
-```
-
-Start Serpico:
-```
-/Users/Shared/Serpico/start_serpico.sh
-```
-
-### Windows
-
-Initialize the database:
-```
-C:\Serpico\init_serpico.bat
-```
-
-Start Serpico:
-```
-C:\Serpico\start_serpico.bat
+ruby serpico.rb
 ```
 
 ## About Serpico
 Serpico is at its core a report generation tool but targeted at creating information security reports. When building a report the user adds "findings" from the template database to the report. When there are enough findings, click 'Generate Report' to create the docx with your findings. The docx design comes from a Report Template which can be added through the UI; a default one is included. The Report Templates use a custom Markup Language to stub the data from the UI (i.e. findings, customer name, etc) and put them into the report.
 
-## Features
+## NEW Features
+#### Import XML report from Nexpose
+**Nexpose parser added.**
+Now you can import findings directly from Nexpose XML report and have your doc report done in seconds.
+![Import from Nexpose](https://media.giphy.com/media/xUPGcrEiAjKPMrHaUM/source.gif)
+
+#### New Statistics & Charts
+**Philosophy: Having things under control.**
+Statistics and beatiful charts (Thanks Chart.js) were added.
+![Calendar](https://media.giphy.com/media/xUA7bfg6YD68Sr9GUw/source.gif)
+
+#### New risk scoring system w/ auto CVSS Calculator
+**Philosophy: Calculating risk of findings should be easy.**
+Now the analyst is able to calc the CVSS (v2) score directly from the finding view, keeping the focus on it.
+![CVSS](https://media.giphy.com/media/l4FGlFV2OC2IOVR7y/source.gif)
+
+#### Generate Remediation Plan in XLSX
+** XLSX Remediation Plan **
+Generate the remediation plan in just one click.
+
+#### Calendar 
+**Philosophy: Scheduling.**
+Now you can place your tasks over time and see the history on a nice calendar view
+![Calendar](https://media.giphy.com/media/xUPGce4Xhy8WsTVggU/source.gif)
+
+#### Auto Summarize of findings overview thanks to NLP
+**Philosophy: Automation.**
+A Natural Language Processing library was added, it summarize the description of findings for you, saving precious time.
+
+## Legacy Features
 #### Report Template Editing is Easy
 **Philosophy: Editing a report template should be easy.**
 During peer review we would constantly ran into "little things" we were fixing from the report template; an extra space here, a misspelling there. But it adds up. With Serpico, "fix" the report template, upload it back through the UI, and generate a new report; the error should be fixed permanently.
@@ -78,18 +70,19 @@ Use the 'Add Attachment' functionality to store a file (e.g. screenshots, nmap s
 ## Microsoft Word Meta-Language
 The Meta language used for Microsoft Word was designed to be as simple as possible while still serving enough features to create a basic penetration test report.  That being said it has a learning curve (and many bugs) and I _highly_ suggest looking at "Serpico - Report.docx" or "Serpico - No DREAD.docx" and editing these rather than working from scratch.
 
+Video Demo of Functionality:
+
+* [Serpico - Demo 1](https://www.youtube.com/watch?v=G_qYcL4ynSc)
+
+* [Additional Video Demos](https://github.com/SerpicoProject/Serpico/wiki#online-demos)
+
 See also:
 
 * [Serpico Meta-Language In Depth](https://github.com/SerpicoProject/Serpico/wiki/Serpico-Meta-Language-In-Depth)
 
-* [Inserting Screenshots](https://github.com/SerpicoProject/Serpico/wiki/Inserting-Screenshots): This is an area we know needs development so e-mail us with any ideas.
+* [Inserting Screenshots](https://github.com/SerpicoProject/Serpico/wiki/Inserting-Screenshots)
 
 
 ## Support
-* [Wiki](https://github.com/MooseDojo/Serpico/wiki): We try to add most common questions to the wiki.
-* [IRC: #therealserpico](http://webchat.freenode.net/?channels=%23therealserpico&uio=d4) on freenode
-* [Issue](https://github.com/SerpicoProject/Serpico/issues/new) : If you have found a bug or would like a new feature
-* [E-mail Support](https://www.serpicoproject.com/purchase/): For teams of users or template related questions
-
-## GOTCHAS
-* Microsoft has a really annoying habit of changing a character for you. Always beware of this when working with the meta language
+* [Wiki](https://github.com/dedins/Serpico-NG/wiki): We try to add most common questions to the wiki.
+* [Issue](https://github.com/dedins/Serpico-NG/issues/new) : If you have found a bug or would like a new feature
