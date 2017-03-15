@@ -70,17 +70,11 @@ Use the 'Add Attachment' functionality to store a file (e.g. screenshots, nmap s
 ## Microsoft Word Meta-Language
 The Meta language used for Microsoft Word was designed to be as simple as possible while still serving enough features to create a basic penetration test report.  That being said it has a learning curve (and many bugs) and I _highly_ suggest looking at "Serpico - Report.docx" or "Serpico - No DREAD.docx" and editing these rather than working from scratch.
 
-Video Demo of Functionality:
-
-* [Serpico - Demo 1](https://www.youtube.com/watch?v=G_qYcL4ynSc)
-
-* [Additional Video Demos](https://github.com/SerpicoProject/Serpico/wiki#online-demos)
-
 See also:
 
-* [Serpico Meta-Language In Depth](https://github.com/SerpicoProject/Serpico/wiki/Serpico-Meta-Language-In-Depth)
+* [Serpico Meta-Language In Depth](https://github.com/dedins/Serpico-NG/wiki/Serpico-NG-Meta-language-In-Depth)
 
-* [Inserting Screenshots](https://github.com/SerpicoProject/Serpico/wiki/Inserting-Screenshots)
+* [Inserting Screenshots](https://github.com/dedins/Serpico-NG/wiki/Inserting-Screenshot)
 
 
 ## Support
