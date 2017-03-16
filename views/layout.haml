@@ -136,7 +136,6 @@
                   %a{ :href => '/admin/config' } Modify Configurations
                 %li
                   %a{ :href => '/admin/dbbackup' } Backup Master Database
-                  %a{ :href => '/admin/attacments_backup' } Backup All Attachments
             - else
               - if @report
                 %script{:type=>"text/javascript"}
@@ -202,4 +201,3 @@
       %input.form-control.btn-block{:autofocus => "", :placeholder => "Username", :required => "", :type => "text", :name=> "username"}
       %input.form-control.btn-block{:placeholder => "Password", :required => "", :type => "password", :name=> "password"}
       %button.btn.btn-signin.btn-block.form-control{:type => "submit"} Sign in
-
