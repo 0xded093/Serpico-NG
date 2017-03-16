@@ -28,17 +28,17 @@ Serpico is at its core a report generation tool but targeted at creating informa
 #### Import XML report from Nexpose
 **Nexpose parser added.**
 Now you can import findings directly from Nexpose XML report and have your doc report done in seconds.
-![Import from Nexpose](https://media.giphy.com/media/xUPGcrEiAjKPMrHaUM/source.gif)
+![Import from Nexpose](https://raw.githubusercontent.com/dedins/Serpico-NG/master/docs/images/short-import_from_nexpose.gif)
 
 #### New Statistics & Charts
 **Philosophy: Having things under control.**
 Statistics and beatiful charts (Thanks Chart.js) were added.
-![Calendar](https://media.giphy.com/media/xUA7bfg6YD68Sr9GUw/source.gif)
+![Calendar](https://raw.githubusercontent.com/dedins/Serpico-NG/master/docs/images/stats.gif)
 
 #### New risk scoring system w/ auto CVSS Calculator
 **Philosophy: Calculating risk of findings should be easy.**
 Now the analyst is able to calc the CVSS (v2) score directly from the finding view, keeping the focus on it.
-![CVSS](https://media.giphy.com/media/l4FGlFV2OC2IOVR7y/source.gif)
+![CVSS](https://raw.githubusercontent.com/dedins/Serpico-NG/master/docs/images/cvss.gif)
 
 #### Generate Remediation Plan in XLSX
 ** XLSX Remediation Plan **
@@ -47,7 +47,7 @@ Generate the remediation plan in just one click.
 #### Calendar 
 **Philosophy: Scheduling.**
 Now you can place your tasks over time and see the history on a nice calendar view
-![Calendar](https://media.giphy.com/media/xUPGce4Xhy8WsTVggU/source.gif)
+![Calendar](https://raw.githubusercontent.com/dedins/Serpico-NG/master/docs/images/calendar.gif)
 
 #### Auto Summarize of findings overview thanks to NLP
 **Philosophy: Automation.**
