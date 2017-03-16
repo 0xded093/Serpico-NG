@@ -49,6 +49,10 @@ Generate the remediation plan in just one click.
 Now you can place your tasks over time and see the history on a nice calendar view
 ![Calendar](https://raw.githubusercontent.com/dedins/Serpico-NG/master/docs/images/calendar.gif)
 
+#### Backup & Restore
+**Global Backup.**
+Now you can backup database (including attachments) and restore in matter of seconds! (See Wiki)
+
 #### Auto Summarize of findings overview thanks to NLP
 **Philosophy: Automation.**
 A Natural Language Processing library was added, it summarize the description of findings for you, saving precious time.
