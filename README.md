@@ -41,7 +41,7 @@ Now the analyst is able to calc the CVSS (v2) score directly from the finding vi
 ![CVSS](https://raw.githubusercontent.com/dedins/Serpico-NG/master/docs/images/cvss.gif)
 
 #### Generate Remediation Plan in XLSX
-** XLSX Remediation Plan **
+**XLSX Remediation Plan**
 Generate the remediation plan in just one click.
 
 #### Calendar 
@@ -50,7 +50,6 @@ Now you can place your tasks over time and see the history on a nice calendar vi
 ![Calendar](https://raw.githubusercontent.com/dedins/Serpico-NG/master/docs/images/calendar.gif)
 
 #### Backup & Restore
-**Global Backup.**
 Now you can backup database (including attachments) and restore in matter of seconds! (See Wiki)
 
 #### Auto Summarize of findings overview thanks to NLP
