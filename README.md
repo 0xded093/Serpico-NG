@@ -10,7 +10,6 @@ The installation commands for installing on a Ubuntu 16.04.2 LTS container:
 mkdir Serpico-NG && cd Serpico-NG && wget https://raw.githubusercontent.com/dedins/Serpico-NG/master/Dockerfile && docker build -t serpico-ng .
 ```
 
-
 ## Manual Installation
 
 The installation commands for an Ubuntu 16.04.2 LTS are:
@@ -49,7 +48,7 @@ Launch the first_time.rb script (in order to initialize the database) and follow
 cd Serpico-NG && ruby scripts/first_time.rb
 ```
 
-And then start Serpico-NG (HTTPS, 8443 port, on all interfaces by default):
+And then start Serpico-NG (HTTPS, 8443 port, on 127.0.0.1 by default):
 ```
 cd Serpico-NG && ruby serpico.rb &
 ```
