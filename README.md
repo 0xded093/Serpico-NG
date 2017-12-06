@@ -2,23 +2,56 @@
 ## SimplE RePort wrIting and CollaboratiOn tool NEXT-GENERATION
 Serpico was a cool open-source penetration testing report generation and collaboration tool. It was developed to cut down on the amount of time it takes to write a penetration testing report, and now it's even better!
 
-## Installation
+## Docker Installation
 
-### Linux / OS X / Windows
+The installation commands for installing on a Ubuntu 16.04.2 LTS container:
 
-Clone the repo:
 ```
-git clone https://github.com/dedins/Serpico-NG
-```
-
-Initialize the database:
-```
-ruby scripts/first_time.rb
+mkdir Serpico-NG && cd Serpico-NG && wget https://raw.githubusercontent.com/dedins/Serpico-NG/master/Dockerfile && docker build -t serpico-ng .
 ```
 
-And then start Serpico:
+
+## Manual Installation
+
+The installation commands for an Ubuntu 16.04.2 LTS are:
+
+Install required packages:
 ```
-ruby serpico.rb
+sudo apt-get install git ruby ruby-dev build-essential make pkg-config libxml2-dev libglib2.0-dev libsqlite3-dev bundler
+```
+
+Clone git repository:
+```
+git clone https://github.com/Serpico-NG/Serpico-NG.git
+```
+
+Install Serpico-NG dependencies:
+```
+cd Serpico-NG && bundler install
+```
+
+Clone repository of dm-types library:
+```
+cd .. && git clone -b "gem-v1.2.2-with-frozen-nilclass-fix" https://github.com/julienma/dm-types.git
+```
+
+Install dm-types library:
+```
+cd dm-types && gem build dm-types.gemspec && sudo gem install dm-types-1.2.2.gem
+```
+
+## Post-Installation Releases : Getting Started
+
+### Ubuntu 16.04.2 LTS
+
+Launch the first_time.rb script (in order to initialize the database) and follow the instructions:
+```
+cd Serpico-NG && ruby scripts/first_time.rb
+```
+
+And then start Serpico-NG (HTTPS, 8443 port, on all interfaces by default):
+```
+cd Serpico-NG && ruby serpico.rb &
 ```
 
 ## About Serpico
