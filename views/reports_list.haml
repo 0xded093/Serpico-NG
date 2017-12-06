@@ -1,0 +1,65 @@
+.span10.indent3
+  %br
+    .table.table-striped
+      %div{:id => "reports"}
+        %table{:style => 'width: 90%'}
+          %thead
+            %th Report Name
+            %th Owner
+            %th Actions
+            %th Company
+            %th Created on
+          %tbody{:class => "list"}
+            - if @reports.size > 0
+              %input{:class => "search", :placeholder => "Search"}
+              %button{:class => "sort btn btn-default", :'data-sort' => "name"} Sort by Name
+              %button{:class => "sort btn btn-default", :'data-sort' => "company"} Sort by Company
+              - @reports.each do |report|
+                %tr
+                  %td{:style => 'width: 30%', :class=>"name"}
+                    #{report.report_name}
+                  %td{:style => 'width: 10%', :class=>"owner"}
+                    #{report.owner}
+                  %td{:style => 'width: 30%', :class=>"buttons"}
+                    - if @master
+                      %a{:class => 'button btn btn-warning', :href => "/master/reports/#{finding.id}"}
+                        %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
+                      %a{:class => 'btn btn-info', :href => "/master/reports/#{report.id}/generate"}
+                        %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+                    - else
+                      - if @admin
+                        %a{:class => 'btn btn-warning', :href => "/report/#{report.id}/findings"}
+                          %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
+                        %a{:class => 'btn btn-info', :href => "/report/#{report.id}/generate"}
+                          %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+                        %a{:class => 'btn btn-success', :href => "/report/#{report.id}/remediation"}
+                          %i{:class => 'icon-play-circle', :title => 'Remediation Plan'}
+                        %a{:class => 'btn btn-warning', :href => "/report/#{report.id}/presentation"}
+                          %i{:class => 'icon-play-circle', :title => 'Presentation'}
+                        %a{ :class => "btn btn-danger", :href => "/report/#{report.id}/remove"}
+                          %i{:class => 'icon-remove icon-white', :title => 'Delete'}
+                        %a{ :class => "btn btn-inverse", :href => "/admin/add_user/#{report.id}"}
+                          %i{:class => 'icon-user icon-white', :title => 'Add Author'}
+                      - else
+                        %a{:class => 'btn btn-warning', :href => "/report/#{report.id}/presentation"}
+                          %i{:class => 'icon-play-circle', :title => 'Presentation'}
+                        %a{:class => 'btn btn-warning', :href => "/report/#{report.id}/findings"}
+                          %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
+                        %a{ :class => "btn btn-danger", :href => "/report/#{report.id}/remove"}
+                          %i{:class => 'icon-remove icon-white', :title => 'Delete'}
+                        %a{ :class => "btn btn-inverse", :href => "/admin/add_user/#{report.id}"}
+                          %i{:class => 'icon-user icon-white', :title => 'Add Author'}
+                  %td{:style => 'width: 20%', :class=>"company"}
+                    #{report.short_company_name}
+                  %td{:style => 'width: 10%', :class=>"date"}
+                    #{report.date}
+
+              %script{:type=>"text/javascript"}
+                var options = {
+                valueNames: [ 'name', 'company', 'date', 'owner'  ]
+                };
+                var userList = new List('reports', options);
+
+            - else
+              %h4
+                You have no reports, how about <a href="/report/new">creating</a> or <a href="/report/import">importing</a>one...

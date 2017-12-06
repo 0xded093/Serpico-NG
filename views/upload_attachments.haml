@@ -1,0 +1,24 @@
+.span10
+  %form{:method => 'post', :enctype=>"multipart/form-data"}
+    %br
+    %h2 Upload Attachment
+    %h4 Note: 
+    %h4 &nbsp;&nbsp;&bullet;&nbsp;Only jpg and png are supported for screenshots
+    %h4 &nbsp;&nbsp;&bullet;&nbsp;The file name is inherited from the file.
+    %h4 &nbsp;&nbsp;&bullet;&nbsp;Multiple files can be uploaded at once.   
+    - if @no_file == "1"
+      You forgot to include a file, silly
+    %br
+    %br
+    %table
+      %tr
+        %td
+          Upload Files &nbsp;
+        %td
+          %input{:type => 'file', :name => 'files[]', :multiple => true}
+    %br
+    %input{:type => 'submit', :value => 'Upload', :class => "btn btn-default"}
+    %a{ :href => "/report/#{@report.id}/edit"}
+      %input{ :type => "button", :value => 'Cancel', :class => "btn btn-default"}
+
+

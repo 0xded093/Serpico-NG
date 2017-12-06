@@ -1,0 +1,18 @@
+.span10
+  %form{:method => 'post', :enctype=>"multipart/form-data"}
+    %br
+    %h2 Restore attachments from Attachments Export
+    %h4 Note: the restore file MUST be a zip file from the Attachments Export
+    - if @no_file == "1"
+      You forgot to include a file, silly
+    %br
+    %br
+    %table
+      %tr
+        %td
+          Upload &nbsp;
+        %td
+          %input{:type => 'file', :name => 'file',}
+    %br
+    %input{:type => 'submit', :value => 'Upload' , :class => "btn btn-default"}
+      %input{ :type => "button", :value => 'Cancel', :class => "btn btn-default"}

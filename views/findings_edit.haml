@@ -1,0 +1,400 @@
+%link{:href => "/css/bootstrap-suggest.css", :rel => "stylesheet"}/
+%script{:src => "/js/bootstrap-suggest.js"}
+%script{:src => "/js/cvss.js"}
+%script{:src => "/js/taggle.js"}
+
+.span10
+  %br
+  %h2 #{@finding.title}
+  %a{:href => "#", :'data-type' => "text", :id => 'summary', :'data-pk' => "#{@finding.id}", :'data-url' => "/report/#{@report.id}/findings/#{@finding.id}/summary", :'data-title' => "summary"} #{@finding.summary}
+  :javascript
+    $.fn.editable.defaults.mode = 'inline';
+    $(document).ready(function() {
+    $('#summary').editable();
+    });
+  %br
+  %br
+  %form{ :class => "form-horizontal", :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
+    .control-group
+      %label{ :class => "control-label", :for => "title" } Title
+      .controls
+        %input{ :type => 'text', :name => 'title', :value => "#{@finding.title}"}
+    .control-group
+      %label{ :class => "control-label", :for => "input-tags" } Tags
+      .controls
+        %input{ :type => 'text', :id => 'input-tags' ,:name => 'tags', :value => "#{@finding.tags}"}
+      %script{:type=>"text/javascript"}
+        $('#input-tags').selectize({
+        delimiter: ',',
+        persist: false,
+        create: function(input) {
+        return {
+        value: input,
+        text: input
+        }
+        }
+        });
+    -if !@master
+      %br
+      .control-group
+        %label{ :class => "control-label", :for => "assessment_type" } Assessment Type
+        .controls
+          %select{ :name => "assessment_type" }
+            - options.assessment_types.each do |type|
+              - if @finding
+                - if type == @finding.assessment_type
+                  %option{ :selected => "selected" } #{type}
+                - else
+                  %option #{type}
+    -if @master
+      .control-group
+        %label{ :class => "control-label", :for => "approved" } Approved
+        .controls
+          -if @finding.approved
+            %input{ :type=>"checkbox", :name => 'approved', :checked=>"checked"}
+          - else
+            %input{ :type=>"checkbox", :name => 'approved'}
+      .control-group
+        %label{ :class => "control-label", :for => "cvss_score" } CVSS Score
+        .controls
+          %input{ :type => 'text', :id => 'cvss_score' ,:name => 'cvss_score', :value => "#{@finding.cvss_score}", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "cvss_vector" } CVSS Vector
+        .controls
+          %input{ :type => 'text', :id => 'cvss_vector' ,:name => 'cvss_vector', :value => "#{@finding.cvss_vector}", :required => false}
+      .control-group
+        %label{ :class => "control-label", :for => "cvss_severity" } CVSS Severity
+        .controls
+          %input{ :type => 'text', :id => 'cvss_severity' ,:name => 'cvss_severity', :value => "#{@finding.cvss_severity}", :required => true}
+      %div{:id => 'cvssboard'}
+      :javascript
+        var c = new CVSS("cvssboard", {
+            onchange: function() {
+                document.getElementById("cvss_vector").value = c.get().vector;
+                document.getElementById("cvss_score").value = c.get().score;
+                document.getElementById("cvss_severity").value = c.get().severity;
+            }
+        });
+        if (document.getElementById("cvss_vector").value.length > 0) {
+            c.set(document.getElementById("cvss_vector").value);
+        }
+      - if @vulnmap
+        .control-group
+          %label{ :class => "control-label", :for => "existingvulnmaps" } Vuln IDs mapped to this finding
+          .controls
+            .table
+              %table{ :style => 'width: 220px'}
+                - @vulnmaps.each do |vuln|
+                  - if vuln.msf_ref
+                    %tr
+                      %td
+                        #{vuln.msf_ref}
+                      %td{ :align => "right"}
+                        %a{ :class => "btn btn-danger btn-sm", :href => "/mapping/#{@finding.id}/vulnmap/#{vuln.id}/delete"}
+                          %i{:class => 'icon-remove icon-white icon-sm', :value => "#{vuln.msf_ref}", :type => "submit", :title => 'Delete'}
+        .control-group
+          %label{ :class => "control-label", :for => "msf_ref" }
+            %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
+              Add new Vuln ID mapping
+          .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+            .modal-header
+              %button{:type=>'button', :class=>'close btn btn-default', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+                x
+              %h3{:id=>"modal-label"}
+                Vulnerability Importing
+            .modal-body
+              %p
+                The references field in Metasploits database contains various types of reference codes.
+              %p
+                When importing vulnerabilities from Metasploit, Serpico will split these reference codes by comma. Whatever is placed in the Vuln ID mapping field will be checked for a string comparison upon import. This allows Serpico to support any type of vendor/tool that Metasploit supports.
+              %h4 Big fat Warning
+              %p{:class=>"text-error"}
+                Metasploit doesn't do the best job at parsing these reference codes. Use CVEs over vendor specific IDs whenever possible. Burp is not support via this method. Instead, use the legacy Burp XML importer.
+              %br
+                %h4 Supported reference codes:
+                .table
+                  %table{:width => "70%"}
+                    %thead{:width => "20%"}
+                      %tr
+                        %td
+                          %b Type
+                        %td
+                          %b Format to use
+                    %tbody{:width => "50%"}
+                      %tr
+                        %td
+                          CVE
+                        %td
+                          CVE-2020-1234
+                      %tr
+                        %td
+                          Nessus
+                        %td
+                          NSS-1234
+          .controls
+            %input{ :type => 'text', :name => 'msf_ref'}
+      - if @nessusmap
+        .control-group
+          %label{ :class => "control-label", :for => "existingnessusmaps" } Nessus IDs Mapped to this finding
+          .controls
+            .table
+              %table{ :style => 'width: 220px'}
+                %tbody
+                - @nessus.each do |item|
+                  - if item.pluginid
+                    %tr
+                      %td
+                        #{item.pluginid}
+                      %td{ :align => "right"}
+                        %a{ :class => "btn btn-danger btn-xs", :href => "/mapping/#{@finding.id}/nessus/#{item.pluginid}/delete"}
+                          %i{:class => 'icon-remove icon-white', :value => "#{item.pluginid}", :type => "submit", :title => 'Delete'}
+        .control-group
+          %label{ :class => "control-label", :for => "nessus_pluginid" } Add new nessus ID mapping
+          .controls
+            %input{ :type => 'text', :name => 'nessus_pluginid'}
+      - if @burpmap
+        .control-group
+          %label{ :class => "control-label", :for => "existingburpmaps" } Burp IDs Mapped to this finding
+          .controls
+            .table
+              %table{ :style => 'width: 220px'}
+                %tbody
+                - @burp.each do |item|
+                  - if item.pluginid
+                    %tr
+                      %td
+                        #{item.pluginid}
+                      %td{ :align => "right"}
+                        %a{ :class => "btn btn-danger btn-xs", :href => "/mapping/#{@finding.id}/burp/#{item.pluginid}/delete"}
+                          %i{:class => 'icon-remove icon-white', :value => "#{item.pluginid}", :type => "submit", :title => 'Delete'}
+        .control-group
+          %label{ :class => "control-label", :for => "burp_pluginid" }
+            %a{:href=> '#burpmodal', "data-toggle"=>'modal'}
+              Add new Burp ID mapping
+          .modal{:id=>'burpmodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+            .modal-header
+              %button{:type=>'button', :class=>'close btn btn-default', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+                x
+              %h3{:id=>"modal-label"}
+                Mapping Burp findings
+            .modal-body
+              You can use the following link to help map burp's ids to your findings:
+              %br
+              %br
+              %a{:href=> "http://portswigger.net/burp/help/scanner_issuetypes.html", :target => "_blank"} http://portswigger.net/burp/help/scanner_issuetypes.html
+              %br
+          .controls
+            %input{ :type => 'text', :name => 'burp_pluginid'}
+    - elsif @cvss
+      .control-group
+        %label{ :class => "control-label", :for => "cvss_score" } CVSS Score
+        .controls
+          %input{ :type => 'text', :id => 'cvss_score' ,:name => 'cvss_score', :value => "#{@finding.cvss_score}", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "cvss_vector" } CVSS Vector
+        .controls
+          %input{ :type => 'text', :id => 'cvss_vector' ,:name => 'cvss_vector', :value => "#{@finding.cvss_vector}", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "cvss_severity" } CVSS Severity
+        .controls
+          %input{ :type => 'text', :id => 'cvss_severity' ,:name => 'cvss_severity', :value => "#{@finding.cvss_severity}", :required => true}
+      %div{:id => 'cvssboard'}
+      :javascript
+        var c = new CVSS("cvssboard", {
+            onchange: function() {
+                document.getElementById("cvss_vector").value = c.get().vector;
+                document.getElementById("cvss_score").value = c.get().score;
+                document.getElementById("cvss_severity").value = c.get().severity;
+            }
+        });
+        if (document.getElementById("cvss_vector").value.length > 0) {
+            c.set(document.getElementById("cvss_vector").value);
+        }
+    - else
+    .control-group
+      %label{ :class => "control-label", :for => "effort" } Remediation Effort
+      .controls
+        %select{ :name => "effort" }
+          - options.effort.each do |effort|
+            - if effort == @finding.effort
+              %option{ :selected => "selected" } #{effort}
+            - else
+              %option #{effort}
+    .control-group
+      %label{ :class => "control-label", :for => "type" } Finding Type
+      .controls
+        %select{ :name => "type" }
+          - options.finding_types.each do |type|
+            - if type == @finding.type
+              %option{ :selected => "selected" } #{type}
+            - else
+              %option #{type}
+    .control-group
+      %label{ :class => "control-label", :for => "parameter" } Parameter
+      .controls
+        %input{ :type => 'text', :value => "#{@finding.parameter}" ,:name => 'parameter'}
+    .control-group
+      %label{ :class => "control-label", :for => "method" } Method
+      .controls
+        %select{ :name => "method" }
+          %option{ :selected => "selected"}#{@finding.method}
+          %option GET
+          %option POST
+    .control-group
+      %label{ :class => "control-label", :for => "overview" }
+        %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
+          Overview
+      .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+        .modal-header
+          %button{:type=>'button', :class=>'close btn btn-default', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+            x
+          %h3{:id=>"modal-label"}
+            Meta Markup
+        .modal-body
+          %p
+            There are four markup sets you can use in the Overview and the Remediation summary. This text is converted inside of Microsoft Word.
+            %p{:class=>"text-error"}
+              YOU MUST CLOSE ALL TAGS. OTHERWISE YOU CAN DESTROY ALL TEXT FORMATTING. SEE EXAMPLES BELOW.
+            %b
+              Review the finding "TEST - Markup Tester" for a clear example. As always, press preview to see the finding in Word.
+          %h2
+            &lt;&lt;CUSTOMER&gt;&gt;
+          %p
+            If you place &lt;&lt;CUSTOMER&gt;&gt; in a finding the customer name will be substituted in the finding. This is particularly helpful in the Templated Findings.
+            %br
+            %br
+            %code
+              Overall &lt;&lt;CUSTOMER&gt;&gt; was found to have a strong...
+            %br
+            %br
+            Will generate the following inside of a report:
+            %br
+            %br
+            %code
+              Overall AcmeCorporation was found to have a strong...
+          %h2
+            Bullets
+          %p
+            Place the bulleted text inbetween a *- and a -* like so:
+            %br
+            %br
+            %code
+              *- Bulleted text goes here -*
+          %h2
+            Paragraph Heading Text
+          %p
+            Place the heading inbetween a [== and a ==] like so:
+            %br
+            %br
+            %code
+              [== Heading text goes here ==]
+          %h2
+            Italics
+          %p
+            Place italicized inbetween a [~~ and a ~~] like so:
+            %br
+            %br
+            %code
+              [~~ Italics ~~]
+          %h2
+            Code
+          %p
+            Place code inbetween a [[[ and a ]]] like below. CODE CANNOT STRETCH MULTIPLE LINES.
+            %br
+            %br
+            %code
+              [[[ code, code goes here ]]]
+      .controls
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'overview', :name => 'overview'}
+          - if @finding
+            - if @finding.overview
+              #{meta_markup(@finding.overview)}
+    .control-group
+      %label{ :class => "control-label", :for => "pocu" } Proof of Concept
+      .controls
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'poc', :id => "pocu"}
+          - if @finding
+            - if @finding.poc
+              #{meta_markup(@finding.poc)}
+    - attachments=''
+    - if @attaches
+      - @attaches.each do |attach|
+        - attachments = attachments + "{name: '#{attach}'},"
+    / autosuggest code is care of bootstrap-suggest.js
+    :javascript
+      var files = [
+        #{attachments}
+      ];
+        $('#pocu').suggest('[', {
+          data: files,
+          filter: {
+              casesensitive: true,
+              limit: 10
+            },
+          map: function(file) {
+            return {
+              value: '!!'+file.name+'!!]',
+              text: '<strong>'+file.name+'</strong>'
+            }
+          }
+        })
+
+    - if !@master
+      .control-group
+        %label{ :class => "control-label", :for => "affected_hosts" } Affected Hosts/URLs
+        .controls
+          %textarea{ :rows => '3', :class => 'input-xxlarge', :name => 'affected_hosts'}
+            - if @finding
+              - if @finding.affected_hosts
+                #{meta_markup(@finding.affected_hosts)}
+    .control-group
+      %label{ :class => "control-label", :for => "remediation" } Remediation
+      .controls
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'remediation'}
+          - if @finding
+            - if @finding.remediation
+              #{meta_markup(@finding.remediation)}
+    .control-group
+      %label{ :class => "control-label", :for => "references" } References (One Per Line)
+      .controls
+        %textarea{ :rows => '5', :class => 'input-xxlarge', :name => 'references'}
+          - if @finding
+            - if @finding.references
+              #{meta_markup(@finding.references)}
+    - if !@master
+      .control-group
+        %label{ :class => "control-label", :for => "notes" } Notes Data
+        %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_2", :id=>"actionButton"}
+        .info{ :id => "info_2", :class => "collapse out" }
+          %label
+            Notes
+          .controls
+          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'notes'}
+            - if @finding
+              - if @finding.notes
+                #{meta_markup(@finding.notes)}
+    - if !@master
+      .control-group
+        %label{ :class => "control-label", :for => "preso" } Presentation Data
+        %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_1", :id=>"actionButton"}
+        .info{ :id => "info_1", :class => "collapse out" }
+          %label
+            Presentation Points (One Per Line)
+          .controls
+          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'presentation_points'}
+            - if @finding
+              - if @finding.presentation_points
+                #{meta_markup(@finding.presentation_points)}
+          %label
+            Presentation Remediation Points (One Per Line)
+          .controls
+          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'presentation_rem_points'}
+            - if @finding
+              - if @finding.presentation_rem_points
+                #{meta_markup(@finding.presentation_rem_points)}
+
+
+    - id_r = @report ? "/report/#{@report.id}/findings" : "/master/findings"
+    %input{:type => 'submit', :value => 'Save', :class => "btn btn-default"}
+    %a{ :href => "#{id_r}"}
+      %input{ :type => "button", :value => 'Cancel', :class => "btn btn-default"}
