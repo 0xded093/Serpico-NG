@@ -7,7 +7,10 @@ Serpico was a cool open-source penetration testing report generation and collabo
 The installation commands for installing on a Ubuntu 16.04.2 LTS container:
 
 ```
-mkdir Serpico-NG && cd Serpico-NG && wget https://raw.githubusercontent.com/dedins/Serpico-NG/master/Dockerfile && docker build -t serpico-ng .
+mkdir Serpico-NG && cd Serpico-NG
+```
+```
+curl https://raw.githubusercontent.com/dedins/Serpico-NG/master/Dockerfile | docker build -f - .
 ```
 
 ## Manual Installation
